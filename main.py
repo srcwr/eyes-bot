@@ -6,6 +6,7 @@ import asyncio
 # https://discordpy.readthedocs.io/en/stable/api.html
 
 MY_GUILD = discord.Object(id=int(open("guild.secret").read().strip()))
+TYPING_BOT = False
 
 class MyClient(discord.Client):
     def __init__(self, *, intents: discord.Intents):
@@ -31,7 +32,7 @@ class MyClient(discord.Client):
         print(f'Logged on as {self.user}!')
 
     async def on_message(self, message):
-        if message.author.id == self.user.id:
+        if not TYPING_BOT or message.author.id == self.user.id:
             return
         #if not message.channel.permissions_for(self.user).send_messages:
         #    return
@@ -42,7 +43,7 @@ class MyClient(discord.Client):
             pass
 
     async def on_typing(self, channel, user, when):
-        if user.id == self.user.id:
+        if not TYPING_BOT or user.id == self.user.id:
             return
         #if not channel.permissions_for(self.user).send_messages:
         #    return
