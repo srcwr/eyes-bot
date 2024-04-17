@@ -31,6 +31,49 @@ class MyClient(discord.Client):
     async def on_ready(self):
         print(f'Logged on as {self.user}!')
 
+    """
+    async def on_reaction_add(reaction, user):
+        if reaction.message.id == 978574978914082836:
+            print(reaction)
+            print(user)
+    """
+    async def on_raw_reaction_add(self, payload):
+        #message = await self.get_channel(payload.channel_id).fetch_message(payload.message_id)
+        if payload.message_id == 978574978914082836:
+            guild = self.get_guild(payload.guild_id)
+            member = payload.member # only available if reaction add & inside guild...
+            try:
+                if payload.emoji.name == "💻":
+                    await member.add_roles(guild.get_role(389678983605911554))
+                elif payload.emoji.name == "👀":
+                    await member.add_roles(guild.get_role(911464059830927401))
+                elif payload.emoji.name == "⚡":
+                    await member.add_roles(guild.get_role(1061715448531525732))
+                #elif payload.emoji.name == "😔":
+                #    await member.add_roles(guild.get_role(1230232895671500901))
+            except Exception as e:
+                print(payload)
+                print(e)
+    async def on_raw_reaction_remove(self, payload):
+        #message = await self.get_channel(payload.channel_id).fetch_message(payload.message_id)
+        if payload.message_id == 978574978914082836:
+            guild = self.get_guild(payload.guild_id)
+            member = guild.get_member(payload.user_id)
+            if member is None:
+                return
+            try:
+                if payload.emoji.name == "💻":
+                    await member.remove_roles(guild.get_role(389678983605911554))
+                elif payload.emoji.name == "👀":
+                    await member.remove_roles(guild.get_role(911464059830927401))
+                elif payload.emoji.name == "⚡":
+                    await member.remove_roles(guild.get_role(1061715448531525732))
+                #elif payload.emoji.name == "😔":
+                #    await member.remove_roles(guild.get_role(1230232895671500901))
+            except Exception as e:
+                print(payload)
+                print(e)
+
     async def on_message(self, message):
         if not TYPING_BOT or message.author.id == self.user.id:
             return
@@ -54,7 +97,9 @@ class MyClient(discord.Client):
             pass
 
 intents = discord.Intents.default()
+intents.members = True
 intents.message_content = True
+intents.reactions = True
 intents.typing = True
 
 client = MyClient(intents=intents)
