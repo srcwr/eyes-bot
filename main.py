@@ -1,7 +1,8 @@
-from typing import Optional
 import discord
 from discord import app_commands
 import asyncio
+import secrets
+import json
 
 # https://discordpy.readthedocs.io/en/stable/api.html
 
@@ -29,6 +30,7 @@ class MyClient(discord.Client):
         await self.tree.sync(guild=MY_GUILD)
 
     async def on_ready(self):
+        self.load_reaction_counts()
         print(f'Logged on as {self.user}!')
 
     """
@@ -74,18 +76,7 @@ class MyClient(discord.Client):
                 print(payload)
                 print(e)
 
-    async def on_message(self, message):
-        if not TYPING_BOT or message.author.id == self.user.id:
-            return
-        #if not message.channel.permissions_for(self.user).send_messages:
-        #    return
-        try:
-            async with message.channel.typing():
-                await asyncio.sleep(3.5)
-        except:
-            pass
-
-    async def on_typing(self, channel, user, when):
+    async def send_typing(self, user, channel):
         if not TYPING_BOT or user.id == self.user.id:
             return
         #if not channel.permissions_for(self.user).send_messages:
@@ -95,6 +86,38 @@ class MyClient(discord.Client):
                 await asyncio.sleep(3.5)
         except:
             pass
+
+    def load_reaction_counts(self):
+        with open("reaction_counts.json", "r", encoding="utf-8") as f:
+            self.reaction_counts = json.load(f)
+    def save_reaction_counts(self):
+        with open("reaction_counts.json", "w", encoding="utf-8") as f:
+            json.dump(self.reaction_counts, f)
+    def inc_reaction_counts(self, user_id, emoji):
+        user_id = str(user_id)
+        if not user_id in self.reaction_counts:
+            self.reaction_counts[user_id] = {}
+        if not emoji in self.reaction_counts[user_id]:
+            self.reaction_counts[user_id][emoji] = 0
+        self.reaction_counts[user_id][emoji] += 1
+        self.save_reaction_counts()
+    async def do_reaction_counts(self, message, emoji):
+        await message.add_reaction(emoji)
+        self.inc_reaction_counts(message.author.id, emoji)
+
+    async def on_message(self, message):
+        if secrets.randbelow(100) == 0:
+            await self.do_reaction_counts(message, "🦇")
+        if secrets.randbelow(1000) == 0:
+            await self.do_reaction_counts(message, ":goldbat:663437353787850763")
+        if secrets.randbelow(100) == 0:
+            await self.do_reaction_counts(message, ":corgi:702360708641194005")
+        if secrets.randbelow(1000) == 0:
+            await self.do_reaction_counts(message, ":corgibutt:788514694691553300")
+        await self.send_typing(message.author, message.channel)
+
+    async def on_typing(self, channel, user, when):
+        await self.send_typing(user, channel)
 
 intents = discord.Intents.default()
 intents.members = True
