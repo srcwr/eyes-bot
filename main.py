@@ -106,14 +106,15 @@ class MyClient(discord.Client):
         self.inc_reaction_counts(message.author.id, emoji)
 
     async def on_message(self, message):
-        if secrets.randbelow(100) == 0:
-            await self.do_reaction_counts(message, "🦇")
-        if secrets.randbelow(1000) == 0:
-            await self.do_reaction_counts(message, ":goldbat:663437353787850763")
-        if secrets.randbelow(100) == 0:
-            await self.do_reaction_counts(message, ":corgi:702360708641194005")
-        if secrets.randbelow(1000) == 0:
-            await self.do_reaction_counts(message, ":corgibutt:788514694691553300")
+        if not message.author.bot and not (message.guild is None):
+            if secrets.randbelow(100) == 0:
+                await self.do_reaction_counts(message, "🦇")
+            if secrets.randbelow(1000) == 0:
+                await self.do_reaction_counts(message, ":goldbat:663437353787850763")
+            if secrets.randbelow(100) == 0:
+                await self.do_reaction_counts(message, ":corgi:702360708641194005")
+            if secrets.randbelow(1000) == 0:
+                await self.do_reaction_counts(message, ":corgibutt:788514694691553300")
         await self.send_typing(message.author, message.channel)
 
     async def on_typing(self, channel, user, when):
