@@ -132,4 +132,29 @@ client = MyClient(intents=intents)
 async def owowhatisthis(interaction: discord.Interaction):
     await interaction.response.send_message(f'you just lost the game', ephemeral=True)
 
+@client.tree.command()
+async def top15(interaction: discord.Interaction):
+    embed = discord.Embed(colour=0x7289DA)
+    total_reactions = 0
+    total_reactions_by_user = {}
+    for (user_id, user) in client.reaction_counts.items():
+        total_reactions_by_user[user_id] = 0
+        for (emoji, emoji_count) in user.items():
+            total_reactions += emoji_count
+            total_reactions_by_user[user_id] += emoji_count
+    embed.add_field(name="Total reactions:", value=str(total_reactions))
+    sorted_users = [(k, total_reactions_by_user[k]) for k in sorted(total_reactions_by_user, key=total_reactions_by_user.get, reverse=True)]
+    sorted_users = sorted_users[:15]
+    top15_embed = ''
+    for user in sorted_users:
+        top15_embed += f"**\u2022** {user[1]} <@{user[0]}>"
+        for (emoji, emoji_count) in client.reaction_counts[user[0]].items():
+            if ":" in emoji:
+                top15_embed += f" | {emoji_count}<{emoji}>"
+            else:
+                top15_embed += f" | {emoji_count}{emoji}"
+        top15_embed += '\n'
+    embed.add_field(name="Top 15 users reacted to:", value=top15_embed)
+    await interaction.response.send_message(embed=embed)
+
 client.run(open("token.secret").read().strip())
