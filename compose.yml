@@ -1,0 +1,8 @@
+services:
+  eyes-bot:
+    #user: 1000:1000
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ./main.py:/app/main.py
+      - ./reaction_counts.json:/app/reaction_counts.json

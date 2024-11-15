@@ -1,13 +1,19 @@
+import os
+import json
+import secrets
+
 import discord
 from discord import app_commands
 import asyncio
-import secrets
-import json
 
 # https://discordpy.readthedocs.io/en/stable/api.html
 
-MY_GUILD = discord.Object(id=int(open("guild.secret").read().strip()))
-TYPING_BOT = False
+if "DISCORD_GUILD_ID" in os.environ:
+    MY_GUILD = discord.Object(id=int(os.environ["DISCORD_GUILD_ID"].strip()))
+else:
+    MY_GUILD = discord.Object(id=int(open("guild.secret").read().strip()))
+TYPING_BOT = int(os.environ.get("TYPING_BOT", "0"))
+DISCORD_REACTION_MSGID = int(os.environ.get("DISCORD_REACTION_MSGID", "978574978914082836"))
 
 class MyClient(discord.Client):
     def __init__(self, *, intents: discord.Intents):
@@ -35,13 +41,13 @@ class MyClient(discord.Client):
 
     """
     async def on_reaction_add(reaction, user):
-        if reaction.message.id == 978574978914082836:
+        if reaction.message.id == DISCORD_REACTION_MSGID:
             print(reaction)
             print(user)
     """
     async def on_raw_reaction_add(self, payload):
         #message = await self.get_channel(payload.channel_id).fetch_message(payload.message_id)
-        if payload.message_id == 978574978914082836:
+        if payload.message_id == DISCORD_REACTION_MSGID:
             guild = self.get_guild(payload.guild_id)
             member = payload.member # only available if reaction add & inside guild...
             try:
@@ -58,7 +64,7 @@ class MyClient(discord.Client):
                 print(e)
     async def on_raw_reaction_remove(self, payload):
         #message = await self.get_channel(payload.channel_id).fetch_message(payload.message_id)
-        if payload.message_id == 978574978914082836:
+        if payload.message_id == DISCORD_REACTION_MSGID:
             guild = self.get_guild(payload.guild_id)
             member = guild.get_member(payload.user_id)
             if member is None:
@@ -157,4 +163,7 @@ async def top15(interaction: discord.Interaction):
     embed.add_field(name="Top 15 users reacted to:", value=top15_embed)
     await interaction.response.send_message(embed=embed)
 
-client.run(open("token.secret").read().strip())
+if "DISCORD_TOKEN" in os.environ:
+    client.run(os.environ["DISCORD_TOKEN"].strip())
+else:
+    client.run(open("token.secret").read().strip())
