@@ -3,6 +3,11 @@ services:
     #user: 1000:1000
     build: .
     restart: unless-stopped
+    environment:
+      - DISCORD_GUILD_ID=${DISCORD_GUILD_ID}
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DISCORD_REACTION_MSGID=${DISCORD_REACTION_MSGID}
+      - TYPING_BOT=${TYPING_BOT}
     volumes:
       - ./main.py:/app/main.py
       - ./reaction_counts.json:/app/reaction_counts.json
