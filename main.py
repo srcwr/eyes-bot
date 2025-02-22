@@ -113,6 +113,7 @@ class MyClient(discord.Client):
 
     async def on_message(self, message):
         if not message.author.bot and not (message.guild is None):
+            await asyncio.sleep(0.5)
             if secrets.randbelow(100) == 0:
                 await self.do_reaction_counts(message, "🦇")
             if secrets.randbelow(1000) == 0:
