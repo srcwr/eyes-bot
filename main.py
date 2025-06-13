@@ -128,7 +128,7 @@ class MyClient(discord.Client):
 
     async def on_message(self, message):
         if not message.author.bot and not (message.guild is None):
-            if destroy_user(self, message):
+            if await self.destroy_user(self, message):
                 return
             await asyncio.sleep(1.0)
             if secrets.randbelow(100) == 0:
