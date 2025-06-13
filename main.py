@@ -115,8 +115,20 @@ class MyClient(discord.Client):
         await message.add_reaction(emoji)
         self.inc_reaction_counts(message.author.id, emoji)
 
+    async def destroy_user(self, message):
+        for role in message.author.roles:
+            if role.id != 911464059830927401 and role.id != 1061715448531525732:
+                return False
+        for attachment in message.attachments:
+            if "test2" in attachment.filename or "pstrafing" in attachment.filename:
+                await message.author.ban(reason=f"posting sussy {attachment.filename}")
+                return True
+        return False
+
     async def on_message(self, message):
         if not message.author.bot and not (message.guild is None):
+            if destroy_user(self, message):
+                return
             await asyncio.sleep(1.0)
             if secrets.randbelow(100) == 0:
                 await self.do_reaction_counts(message, "🦇")
@@ -167,6 +179,28 @@ async def top15(interaction: discord.Interaction):
         top15_embed += '\n'
     embed.add_field(name="Top 15 users reacted to:", value=top15_embed)
     await interaction.response.send_message(embed=embed)
+
+@client.tree.command()
+async def eyes(interaction: discord.Interaction):
+    if interaction.guild is None:
+        return
+    if not interaction.user.guild_permissions.administrator:
+        return
+    asyncio.create_task(
+        give_role_to_everyone(
+            interaction.guild.members,
+            interaction.guild.get_role(911464059830927401)
+        )
+    )
+    await interaction.response.send_message(content="giving eyes...")
+
+async def give_role_to_everyone(members, role):
+    for member in members:
+        if member.get_role(role.id) is not None:
+            continue
+        print(f"{role.name} {member}")
+        await member.add_roles(role)
+        await asyncio.sleep(0.5)
 
 if "DISCORD_TOKEN" in os.environ:
     client.run(os.environ["DISCORD_TOKEN"].strip())
