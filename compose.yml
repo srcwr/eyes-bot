@@ -1,6 +1,7 @@
 services:
   eyes-bot:
     #user: 1000:1000
+    stop_grace_period: 2s
     build: .
     restart: unless-stopped
     environment:
