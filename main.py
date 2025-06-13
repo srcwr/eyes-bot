@@ -122,6 +122,7 @@ class MyClient(discord.Client):
         for attachment in message.attachments:
             if "test2" in attachment.filename or "pstrafing" in attachment.filename:
                 await message.author.ban(reason=f"posting sussy {attachment.filename}")
+                await message.channel.send(content=f"banned {message.author.mention}")
                 return True
         return False
 
