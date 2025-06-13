@@ -52,9 +52,11 @@ class MyClient(discord.Client):
             member = payload.member # only available if reaction add & inside guild...
             try:
                 if payload.emoji.name == "💻":
-                    await member.add_roles(guild.get_role(389678983605911554))
+                    #await member.add_roles(guild.get_role(389678983605911554))
+                    pass
                 elif payload.emoji.name == "👀":
-                    await member.add_roles(guild.get_role(911464059830927401))
+                    #await member.add_roles(guild.get_role(911464059830927401))
+                    pass
                 elif payload.emoji.name == "⚡":
                     await member.add_roles(guild.get_role(1061715448531525732))
                 #elif payload.emoji.name == "😔":
@@ -71,9 +73,11 @@ class MyClient(discord.Client):
                 return
             try:
                 if payload.emoji.name == "💻":
-                    await member.remove_roles(guild.get_role(389678983605911554))
+                    #await member.remove_roles(guild.get_role(389678983605911554))
+                    pass
                 elif payload.emoji.name == "👀":
-                    await member.remove_roles(guild.get_role(911464059830927401))
+                    #await member.remove_roles(guild.get_role(911464059830927401))
+                    pass
                 elif payload.emoji.name == "⚡":
                     await member.remove_roles(guild.get_role(1061715448531525732))
                 #elif payload.emoji.name == "😔":
