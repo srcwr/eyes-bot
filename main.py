@@ -62,8 +62,8 @@ class MyClient(discord.Client):
                 #elif payload.emoji.name == "😔":
                 #    await member.add_roles(guild.get_role(1230232895671500901))
             except Exception as e:
-                print(payload)
-                print(e)
+                print(payload, flush=True)
+                print(e, flush=True)
     async def on_raw_reaction_remove(self, payload):
         #message = await self.get_channel(payload.channel_id).fetch_message(payload.message_id)
         if payload.message_id == DISCORD_REACTION_MSGID:
@@ -83,8 +83,8 @@ class MyClient(discord.Client):
                 #elif payload.emoji.name == "😔":
                 #    await member.remove_roles(guild.get_role(1230232895671500901))
             except Exception as e:
-                print(payload)
-                print(e)
+                print(payload, flush=True)
+                print(e, flush=True)
 
     async def send_typing(self, user, channel):
         if not TYPING_BOT or user.id == self.user.id:
@@ -199,7 +199,7 @@ async def give_role_to_everyone(members, role):
     for member in members:
         if member.get_role(role.id) is not None:
             continue
-        print(f"{role.name} {member}")
+        print(f"{role.name} {member}", flush=True)
         await member.add_roles(role)
         await asyncio.sleep(0.5)
 
