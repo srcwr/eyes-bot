@@ -120,6 +120,7 @@ class MyClient(discord.Client):
             if role.id != 911464059830927401 and role.id != 1061715448531525732:
                 return False
         for attachment in message.attachments:
+            print(attachment)
             if "test2" in attachment.filename or "pstrafing" in attachment.filename:
                 await message.author.ban(reason=f"posting sussy {attachment.filename}")
                 await message.channel.send(content=f"banned {message.author.mention}")
@@ -129,6 +130,8 @@ class MyClient(discord.Client):
     async def on_message(self, message):
         if not message.author.bot and not (message.guild is None):
             if await self.destroy_user(message):
+                print("destroying >")
+                print(message, flush=True)
                 return
             await asyncio.sleep(1.0)
             if secrets.randbelow(100) == 0:
