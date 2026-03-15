@@ -9,6 +9,7 @@ services:
       - DISCORD_TOKEN=${DISCORD_TOKEN}
       - DISCORD_REACTION_MSGID=${DISCORD_REACTION_MSGID}
       - TYPING_BOT=${TYPING_BOT}
+      - REACTION_COUNTS_JSON=${REACTION_COUNTS_JSON}
     volumes:
       - ./main.py:/app/main.py
       - ./reaction_counts.json:/app/reaction_counts.json

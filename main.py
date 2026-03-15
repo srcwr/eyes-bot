@@ -14,6 +14,7 @@ else:
     MY_GUILD = discord.Object(id=int(open("guild.secret").read().strip()))
 TYPING_BOT = int(os.environ.get("TYPING_BOT", "0"))
 DISCORD_REACTION_MSGID = int(os.environ.get("DISCORD_REACTION_MSGID", "978574978914082836"))
+REACTION_COUNTS_JSON = os.environ.get("REACTION_COUNTS_JSON", "reaction_counts.json")
 
 class MyClient(discord.Client):
     def __init__(self, *, intents: discord.Intents):
@@ -98,10 +99,10 @@ class MyClient(discord.Client):
             pass
 
     def load_reaction_counts(self):
-        with open("reaction_counts.json", "r", encoding="utf-8") as f:
+        with open(REACTION_COUNTS_JSON, "r", encoding="utf-8") as f:
             self.reaction_counts = json.load(f)
     def save_reaction_counts(self):
-        with open("reaction_counts.json", "w", encoding="utf-8") as f:
+        with open(REACTION_COUNTS_JSON, "w", encoding="utf-8") as f:
             json.dump(self.reaction_counts, f)
     def inc_reaction_counts(self, user_id, emoji):
         user_id = str(user_id)
